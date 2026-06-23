@@ -60,7 +60,7 @@ local embeddedStatLines = Addon:MakeLookupTable{
   "SecondaryStat",
   "Enchant",
   "EnchantOnUse",
-  "Socket",
+--  "Socket",
   "SetBonus",
 }
 
@@ -69,7 +69,7 @@ local miscRewordLines = Addon:MakeLookupTable{
   "SecondaryStat",
   "Enchant",
   "EnchantOnUse",
-  "Socket",
+--  "Socket",
   "SetBonus",
 }
 
@@ -298,8 +298,8 @@ function Addon:RewordLine(tooltip, line, tooltipData)
       
       local replacements = {}
       for stat, statInfo in pairs(self.statsInfo) do
-        if statInfo.GetNormalName then
-          local normalName = strLower(statInfo:GetNormalName())
+        if statInfo.GetAlias then
+          local normalName = strLower(statInfo:GetAlias())
           local capturePattern = "%+?" .. self.L["%d[%d,%.]+"] .. " *" .. self:CoverSpecialCharacters(normalName)
           local startI, endI = strFind(lowerText, capturePattern)
           while startI do

@@ -425,9 +425,140 @@ Addon:AddExtraReplacement("Average Range",
 Addon:AddExtraReplacement("Spellpower text",
   {
     INPUT  = "damage and healing done by magical spells and effects",
-    OUTPUT = "Spellpower",
+    OUTPUT = "Spell Power",
   }
 )
+
+if Addon.isTBC then
+  Addon:AddExtraReplacement("Spell Damage and Healing Trinket",
+    {
+      INPUT  = "Increases spell damage by up to (%d+) and healing by up to (%d+) for (%d+) sec%.%s*(.*)",
+      OUTPUT = function(damage, healing, duration, cooldown)
+        return "+" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
+      end,
+    }
+  )
+  
+  Addon:AddExtraReplacement("Healing and Spell Damage Trinket",
+    {
+      INPUT  = "Increases healing done by spells.-by up to (%d+) and damage done by spells by up to (%d+) for (%d+) sec%.%s*(.*)",
+      OUTPUT = function(healing, damage, duration, cooldown)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Eye of the Dead Trinket",
+    {
+      INPUT  = "Increases healing done by the next (%d+) spells by up to (%d+) and damage done by up to (%d+) for (%d+) sec%.%s*(.*)",
+      OUTPUT = function(count, healing, damage, duration, cooldown)
+        return "Your next " .. count .. " spells have +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " and +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
+      end,
+    }
+  )
+  
+  Addon:AddExtraReplacement("Spell Crit and Spell Power Enchant",
+    {
+      INPUT  = "Spell Critical Strike Rating and %+([%d,]+) Spell Damage and Healing",
+      OUTPUT = function(power)
+        return Addon.statsInfo["Spell Critical Strike Rating"]:GetAlias() .. " and +" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
+      end,
+    }
+  )
+  
+  Addon:AddExtraReplacement("Spell Power and Spell Hit Enchant",
+    {
+      INPUT  = "Spell Power and %+([%d,]+) Spell Hit Rating",
+      OUTPUT = function(hit)
+        return Addon.statsInfo["Spell Power"]:GetAlias() .. " and +" .. hit .. " " .. Addon.statsInfo["Spell Hit Rating"]:GetAlias()
+      end,
+    }
+  )
+  
+  Addon:AddExtraReplacement("Spell Haste Trinket Proc",
+    {
+      INPUT  = "increase your spell haste rating by (%d+)",
+      OUTPUT = function(haste)
+        return "+" .. haste .. " " .. Addon.statsInfo["Spell Haste Rating"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Physical Haste Trinket Proc",
+    {
+      INPUT  = "Increases haste rating by (%d+)",
+      OUTPUT = function(haste)
+        return "+" .. haste .. " " .. Addon.statsInfo["Physical Haste Rating"]:GetAlias()
+      end,
+    },
+    {
+      INPUT  = "Increases your haste rating by (%d+)",
+      OUTPUT = function(haste)
+        return "+" .. haste .. " " .. Addon.statsInfo["Physical Haste Rating"]:GetAlias()
+      end,
+    },
+    {
+      INPUT  = "increase your haste rating by (%d+)",
+      OUTPUT = function(haste)
+        return "+" .. haste .. " " .. Addon.statsInfo["Physical Haste Rating"]:GetAlias()
+      end,
+    }
+  )
+  
+  Addon:AddExtraReplacement("Spell Damage Trinket Proc",
+    {
+      INPUT  = "[Gg]rants (%d+) increased spell damage",
+      OUTPUT = function(damage)
+        return "+" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Attack Power Trinket Proc",
+    {
+      INPUT  = "[Ii]ncreases? your attack power by (%d+)",
+      OUTPUT = function(ap)
+        return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Armor Penetration Trinket Proc",
+    {
+      INPUT  = "gives? you ([%d,]+) Armor Penetration",
+      OUTPUT = function(ap)
+        return "+" .. ap .. " " .. Addon.statsInfo["Armor Penetration Rating"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Spell Power Trinket Proc",
+    {
+      INPUT  = "[Ii]ncreases? your spell damage and healing by (%d+)",
+      OUTPUT = function(power)
+        return "+" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Tome of Fiery Redemption Proc",
+    {
+      INPUT  = "you will gain up to (%d+) spell damage and healing",
+      OUTPUT = function(power)
+        return "to +" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Spirit Trinket Proc",
+    {
+      INPUT  = "[Ii]ncreases? your Spirit by %+?(%d+)",
+      OUTPUT = function(spirit)
+        return "+" .. spirit .. " " .. Addon.statsInfo["Spirit"]:GetAlias()
+      end,
+    }
+  )
+end
 
 -- Temp Stat Buff
 Addon:AddExtraReplacement("Temp Stat Buff",
@@ -444,11 +575,3 @@ Addon:AddExtraReplacement("Temp Stat Buff",
     OUTPUT = "+%2 %1 %3",
   }
 )
-
-
-
-
-
-
-
-
