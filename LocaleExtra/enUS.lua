@@ -481,6 +481,12 @@ if Addon.isTBC then
       OUTPUT = function(haste)
         return "+" .. haste .. " " .. Addon.statsInfo["Spell Haste Rating"]:GetAlias()
       end,
+    },
+    {
+      INPUT  = "increasing spell haste rating by (%d+)",
+      OUTPUT = function(haste)
+        return "+" .. haste .. " " .. Addon.statsInfo["Spell Haste Rating"]:GetAlias()
+      end,
     }
   )
 
@@ -520,12 +526,18 @@ if Addon.isTBC then
       OUTPUT = function(ap)
         return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
       end,
+    },
+    {
+      INPUT  = "[Ii]ncreases? attack power by (%d+)",
+      OUTPUT = function(ap)
+        return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      end,
     }
   )
 
   Addon:AddExtraReplacement("Armor Penetration Trinket Proc",
     {
-      INPUT  = "gives? you ([%d,]+) Armor Penetration",
+      INPUT  = "gives?%s+you%s+([%d,]+)%s+[Aa]rmor%s+[Pp]enetration",
       OUTPUT = function(ap)
         return "+" .. ap .. " " .. Addon.statsInfo["Armor Penetration Rating"]:GetAlias()
       end,
@@ -555,6 +567,42 @@ if Addon.isTBC then
       INPUT  = "[Ii]ncreases? your Spirit by %+?(%d+)",
       OUTPUT = function(spirit)
         return "+" .. spirit .. " " .. Addon.statsInfo["Spirit"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Dodge Trinket Proc",
+    {
+      INPUT  = "Increases dodge rating by (%d+)",
+      OUTPUT = function(dodge)
+        return "+" .. dodge .. " " .. Addon.statsInfo["Dodge Rating"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Defense Trinket Proc",
+    {
+      INPUT  = "Increases your defense rating by (%d+)",
+      OUTPUT = function(defense)
+        return "+" .. defense .. " " .. Addon.statsInfo["Defense Rating"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Attack Power Penalty Proc",
+    {
+      INPUT  = "decreases your melee and ranged attack power by (%d+)",
+      OUTPUT = function(ap)
+        return "-" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Block Value Proc",
+    {
+      INPUT  = "[Ii]ncreases your shield block value by (%d+)",
+      OUTPUT = function(value)
+        return "+" .. value .. " " .. Addon.statsInfo["Block Value"]:GetAlias()
       end,
     }
   )

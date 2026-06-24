@@ -300,7 +300,7 @@ function Addon:RewordLine(tooltip, line, tooltipData)
       for stat, statInfo in pairs(self.statsInfo) do
         if statInfo.GetAlias then
           local normalName = strLower(statInfo:GetAlias())
-          local capturePattern = "%+?" .. self.L["%d[%d,%.]+"] .. " *" .. self:CoverSpecialCharacters(normalName)
+          local capturePattern = "%+?" .. self.L["%d[%d,%.]*"] .. " *" .. self:CoverSpecialCharacters(normalName)
           local startI, endI = strFind(lowerText, capturePattern)
           while startI do
             local isInRatingBusterAddition = false
@@ -334,7 +334,7 @@ function Addon:RewordLine(tooltip, line, tooltipData)
           local statText = strSub(text, startI, endI)
           local replacementText = statText
           if self:GetOption("allow", "reword") then
-            local plus, number = strMatch(statText, "(%+?)(" .. self.L["%d[%d,%.]+"] .. ")")
+            local plus, number = strMatch(statText, "(%+?)(" .. self.L["%d[%d,%.]*"] .. ")")
             if number and strFind(number, "%d") then -- needed for dealing with false positives like title line of 103945
               local defaultForm = statInfo:GetDefaultForm(number)
               local normalForm = statInfo:ConvertToNormalForm(defaultForm)
