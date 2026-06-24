@@ -422,95 +422,242 @@ Addon:AddExtraReplacement("Average Range",
 
 
 -- Spellpower
-Addon:AddExtraReplacement("Spellpower text",
+Addon:AddExtraReplacement("Spell Power Proc",
   {
-    INPUT  = "damage and healing done by magical spells and effects",
-    OUTPUT = "Spell Power",
+    INPUT  = "[Ii]ncreases damage and healing done by magical spells and effects by up to (%d+)",
+    OUTPUT = function(power)
+      return "+" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
+    end,
   }
 )
 
 if Addon.isTBC then
-  Addon:AddExtraReplacement("Spell Damage and Healing Trinket",
+    Addon:AddExtraReplacement("Enchants",
     {
-      INPUT  = "Increases spell damage by up to (%d+) and healing by up to (%d+) for (%d+) sec%.%s*(.*)",
-      OUTPUT = function(damage, healing, duration, cooldown)
-        return "+" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
-      end,
-    }
-  )
-  
-  Addon:AddExtraReplacement("Healing and Spell Damage Trinket",
-    {
-      INPUT  = "Increases healing done by spells.-by up to (%d+) and damage done by spells by up to (%d+) for (%d+) sec%.%s*(.*)",
-      OUTPUT = function(healing, damage, duration, cooldown)
-        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
-      end,
-    }
-  )
-
-  Addon:AddExtraReplacement("Eye of the Dead Trinket",
-    {
-      INPUT  = "Increases healing done by the next (%d+) spells by up to (%d+) and damage done by up to (%d+) for (%d+) sec%.%s*(.*)",
-      OUTPUT = function(count, healing, damage, duration, cooldown)
-        return "Your next " .. count .. " spells have +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " and +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
-      end,
-    }
-  )
-  
-  Addon:AddExtraReplacement("Spell Crit and Spell Power Enchant",
-    {
+      -- Spell Crit and Spell Power Enchant
       INPUT  = "Spell Critical Strike Rating and %+([%d,]+) Spell Damage and Healing",
       OUTPUT = function(power)
         return Addon.statsInfo["Spell Critical Strike Rating"]:GetAlias() .. " and +" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
       end,
-    }
-  )
-  
-  Addon:AddExtraReplacement("Spell Power and Spell Hit Enchant",
+    },
     {
+      -- Spell Power and Spell Hit Enchant
       INPUT  = "Spell Power and %+([%d,]+) Spell Hit Rating",
       OUTPUT = function(hit)
         return Addon.statsInfo["Spell Power"]:GetAlias() .. " and +" .. hit .. " " .. Addon.statsInfo["Spell Hit Rating"]:GetAlias()
       end,
+    },
+    {
+      -- Healing and Spell Damage and Mana Regen Enchant (Classic)
+      INPUT  = "%+([%d,]+) Healing Spells and %+([%d,]+) Damage Spells and (%d+) Mana [Pp]er 5 sec%.?",
+      OUTPUT = function(healing, damage, mp5)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " +" .. mp5 .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing and Spell Damage and Mana Regen Enchant
+      INPUT  = "%+([%d,]+) Healing and %+([%d,]+) Spell Damage and (%d+) Mana [Pp]er 5 sec%.?",
+      OUTPUT = function(healing, damage, mp5)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " and +" .. mp5 .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing, Spell Damage and Mana Regen Enchant
+      INPUT  = "%+([%d,]+) Healing %+([%d,]+) Spell Damage and (%d+) Mana [Pp]er 5 sec%.?",
+      OUTPUT = function(healing, damage, mp5)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " and +" .. mp5 .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing, Spell Damage and Mana Regen Enchant (2)
+      INPUT  = "%+([%d,]+) Healing and %+([%d,]+) Spell Damage and %+(%d+) Mana Regen",
+      OUTPUT = function(healing, damage, mp5)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " and +" .. mp5 .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing, Spell Damage and Stamina Enchant
+      INPUT  = "%+([%d,]+) Healing and %+([%d,]+) Spell Damage and %+([%d,]+) Stamina",
+      OUTPUT = function(healing, damage, stamina)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " and +" .. stamina .. " " .. Addon.statsInfo["Stamina"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing, Spell Damage and Stamina Enchant (2)
+      INPUT  = "%+([%d,]+) Healing %+([%d,]+) Spell Damage and %+([%d,]+) Stamina",
+      OUTPUT = function(healing, damage, stamina)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " and +" .. stamina .. " " .. Addon.statsInfo["Stamina"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing, Spell Damage and Stamina Enchant (Classic Spells)
+      INPUT  = "%+([%d,]+) Healing Spells and %+([%d,]+) Damage Spells and %+([%d,]+) Stamina",
+      OUTPUT = function(healing, damage, stamina)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " and +" .. stamina .. " " .. Addon.statsInfo["Stamina"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing and Spell Damage Enchant
+      INPUT  = "%+([%d,]+) Healing Spells and %+([%d,]+) Damage Spells",
+      OUTPUT = function(healing, damage)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias()
+      end,
+    },
+    {
+      -- Healing and Spell Damage Enchant
+      INPUT  = "%+([%d,]+) Healing and %+([%d,]+) Spell Damage",
+      OUTPUT = function(healing, damage)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias()
+      end,
+    },
+    {
+      -- Spell Damage and Healing Enchant
+      INPUT  = "%+([%d,]+) Spell Damage and %+([%d,]+) Healing",
+      OUTPUT = function(damage, healing)
+        return "+" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias()
+      end,
+    },
+    {
+      -- Defense Rating and Dodge Rating Enchant
+      INPUT  = "%+([%d,]+) Defense Rating and %+([%d,]+) Dodge Rating",
+      OUTPUT = function(defense, dodge)
+        return "+" .. defense .. " " .. Addon.statsInfo["Defense Rating"]:GetAlias() .. " and +" .. dodge .. " " .. Addon.statsInfo["Dodge Rating"]:GetAlias()
+      end,
+    },
+    {
+      -- Dodge Rating and Defense Rating Enchant
+      INPUT  = "%+([%d,]+) Dodge Rating and %+([%d,]+) Defense Rating",
+      OUTPUT = function(dodge, defense)
+        return "+" .. dodge .. " " .. Addon.statsInfo["Dodge Rating"]:GetAlias() .. " and +" .. defense .. " " .. Addon.statsInfo["Defense Rating"]:GetAlias()
+      end,
+    },
+    {
+      -- Attack Power and Hit Rating Enchant
+      INPUT  = "%+([%d,]+) Attack Power and %+([%d,]+) Hit Rating",
+      OUTPUT = function(ap, hit)
+        return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias() .. " and +" .. hit .. " " .. Addon.statsInfo["Physical Hit Rating"]:GetAlias()
+      end,
+    },
+    {
+      -- Hit Rating and Attack Power Enchant
+      INPUT  = "%+([%d,]+) Hit Rating and %+([%d,]+) Attack Power",
+      OUTPUT = function(hit, ap)
+        return "+" .. hit .. " " .. Addon.statsInfo["Physical Hit Rating"]:GetAlias() .. " and +" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      end,
+    },
+    {
+      -- Spell Damage and Healing Enchant (to Spell Power)
+      INPUT  = "%+([%d,]+) Spell Damage and Healing",
+      OUTPUT = function(power)
+        return "+" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
+      end,
+    },
+    {
+      -- Spell Penetration Enchant
+      INPUT  = "%+([%d,]+) Spell Penetration",
+      OUTPUT = function(pen)
+        return "+" .. pen .. " " .. Addon.statsInfo["Spell Penetration"]:GetAlias()
+      end,
+    },
+    {
+      -- Spell Critical Strike Rating Enchant
+      INPUT  = "%+([%d,]+) Spell Critical Strike Rating",
+      OUTPUT = function(crit)
+        return "+" .. crit .. " " .. Addon.statsInfo["Spell Critical Strike Rating"]:GetAlias()
+      end,
+    },
+    {
+      -- Spell Hit Rating Enchant
+      INPUT  = "%+([%d,]+) Spell Hit Rating",
+      OUTPUT = function(hit)
+        return "+" .. hit .. " " .. Addon.statsInfo["Spell Hit Rating"]:GetAlias()
+      end,
+    },
+    {
+      -- Attack Power and Critical Strike Rating Enchant
+      INPUT  = "%+([%d,]+) Attack Power and %+([%d,]+) Critical Strike Rating",
+      OUTPUT = function(ap, crit)
+        return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias() .. " and +" .. crit .. " " .. Addon.statsInfo["Physical Critical Strike Rating"]:GetAlias()
+      end,
+    },
+    {
+      -- Critical Strike Rating and Attack Power Enchant
+      INPUT  = "%+([%d,]+) Critical Strike Rating and %+([%d,]+) Attack Power",
+      OUTPUT = function(crit, ap)
+        return "+" .. crit .. " " .. Addon.statsInfo["Physical Critical Strike Rating"]:GetAlias() .. " and +" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      end,
+    },
+    {
+      -- Mana every 5 sec. Enchant
+      INPUT  = "%+([%d,]+) mana every 5 sec%.?",
+      OUTPUT = function(regen)
+        return "+" .. regen .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
+      end,
     }
   )
   
-  Addon:AddExtraReplacement("Spell Haste Trinket Proc",
+  Addon:AddExtraReplacement("Spell Damage and Healing Trinket Procs",
     {
+      -- Spell Damage and Healing Trinket
+      INPUT  = "Increases spell damage by up to (%d+) and healing by up to (%d+) for (%d+) sec%.%s*(.*)",
+      OUTPUT = function(damage, healing, duration, cooldown)
+        return "+" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
+      end,
+    },
+    {
+      -- Healing and Spell Damage Trinket
+      INPUT  = "Increases healing done by spells.-by up to (%d+) and damage done by spells by up to (%d+) for (%d+) sec%.%s*(.*)",
+      OUTPUT = function(healing, damage, duration, cooldown)
+        return "+" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
+      end,
+    },
+    {
+      -- Eye of the Dead Trinket
+      INPUT  = "Increases healing done by the next (%d+) spells by up to (%d+) and damage done by up to (%d+) for (%d+) sec%.%s*(.*)",
+      OUTPUT = function(count, healing, damage, duration, cooldown)
+        return "Your next " .. count .. " spells have +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias() .. " +" .. damage .. " " .. Addon.statsInfo["Spell Damage"]:GetAlias() .. " for " .. duration .. " sec. " .. cooldown
+      end,
+    }
+  )
+
+  Addon:AddExtraReplacement("Haste Trinket Procs",
+    {
+      -- Spell Haste Trinket Proc (1)
       INPUT  = "increase your spell haste rating by (%d+)",
       OUTPUT = function(haste)
         return "+" .. haste .. " " .. Addon.statsInfo["Spell Haste Rating"]:GetAlias()
       end,
     },
     {
+      -- Spell Haste Trinket Proc (2)
       INPUT  = "increasing spell haste rating by (%d+)",
       OUTPUT = function(haste)
         return "+" .. haste .. " " .. Addon.statsInfo["Spell Haste Rating"]:GetAlias()
       end,
-    }
-  )
-
-  Addon:AddExtraReplacement("Physical Haste Trinket Proc",
+    },
     {
+      -- Physical Haste Trinket Proc (1)
       INPUT  = "Increases haste rating by (%d+)",
       OUTPUT = function(haste)
         return "+" .. haste .. " " .. Addon.statsInfo["Physical Haste Rating"]:GetAlias()
       end,
     },
     {
+      -- Physical Haste Trinket Proc (2)
       INPUT  = "Increases your haste rating by (%d+)",
       OUTPUT = function(haste)
         return "+" .. haste .. " " .. Addon.statsInfo["Physical Haste Rating"]:GetAlias()
       end,
     },
     {
+      -- Physical Haste Trinket Proc (3)
       INPUT  = "increase your haste rating by (%d+)",
       OUTPUT = function(haste)
         return "+" .. haste .. " " .. Addon.statsInfo["Physical Haste Rating"]:GetAlias()
       end,
     }
   )
-  
+
   Addon:AddExtraReplacement("Spell Damage Trinket Proc",
     {
       INPUT  = "[Gg]rants (%d+) increased spell damage",
@@ -520,17 +667,26 @@ if Addon.isTBC then
     }
   )
 
-  Addon:AddExtraReplacement("Attack Power Trinket Proc",
+  Addon:AddExtraReplacement("Attack Power Trinket Procs",
     {
+      -- Attack Power Trinket Proc (1)
       INPUT  = "[Ii]ncreases? your attack power by (%d+)",
       OUTPUT = function(ap)
         return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
       end,
     },
     {
+      -- Attack Power Trinket Proc (2)
       INPUT  = "[Ii]ncreases? attack power by (%d+)",
       OUTPUT = function(ap)
         return "+" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      end,
+    },
+    {
+      -- Attack Power Penalty Proc
+      INPUT  = "decreases your melee and ranged attack power by (%d+)",
+      OUTPUT = function(ap)
+        return "-" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
       end,
     }
   )
@@ -544,17 +700,16 @@ if Addon.isTBC then
     }
   )
 
-  Addon:AddExtraReplacement("Spell Power Trinket Proc",
+  Addon:AddExtraReplacement("Spell Power Trinket Procs",
     {
+      -- Spell Power Trinket Proc
       INPUT  = "[Ii]ncreases? your spell damage and healing by (%d+)",
       OUTPUT = function(power)
         return "+" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
       end,
-    }
-  )
-
-  Addon:AddExtraReplacement("Tome of Fiery Redemption Proc",
+    },
     {
+      -- Spell damage and healing Proc
       INPUT  = "you will gain up to (%d+) spell damage and healing",
       OUTPUT = function(power)
         return "to +" .. power .. " " .. Addon.statsInfo["Spell Power"]:GetAlias()
@@ -571,38 +726,49 @@ if Addon.isTBC then
     }
   )
 
-  Addon:AddExtraReplacement("Dodge Trinket Proc",
+  Addon:AddExtraReplacement("Tank Trinket Procs",
     {
+      -- Dodge Trinket Proc
       INPUT  = "Increases dodge rating by (%d+)",
       OUTPUT = function(dodge)
         return "+" .. dodge .. " " .. Addon.statsInfo["Dodge Rating"]:GetAlias()
       end,
-    }
-  )
-
-  Addon:AddExtraReplacement("Defense Trinket Proc",
+    },
     {
+      -- Defense Trinket Proc
       INPUT  = "Increases your defense rating by (%d+)",
       OUTPUT = function(defense)
         return "+" .. defense .. " " .. Addon.statsInfo["Defense Rating"]:GetAlias()
       end,
-    }
-  )
-
-  Addon:AddExtraReplacement("Attack Power Penalty Proc",
+    },
     {
-      INPUT  = "decreases your melee and ranged attack power by (%d+)",
-      OUTPUT = function(ap)
-        return "-" .. ap .. " " .. Addon.statsInfo["Attack Power"]:GetAlias()
+      -- Block Value Proc (1)
+      INPUT  = "[Ii]ncreases your shield block value by (%d+)",
+      OUTPUT = function(value)
+        return "+" .. value .. " " .. Addon.statsInfo["Block Value"]:GetAlias()
+      end,
+    },
+    {
+      -- Block Value Proc (2)
+      INPUT  = "[Ii]ncreases the block value of your shield by (%d+)",
+      OUTPUT = function(value)
+        return "+" .. value .. " " .. Addon.statsInfo["Block Value"]:GetAlias()
+      end,
+    },
+    {
+      -- Block Rating Proc
+      INPUT  = "Increases block rating by (%d+)",
+      OUTPUT = function(value)
+        return "+" .. value .. " " .. Addon.statsInfo["Block Rating"]:GetAlias()
       end,
     }
   )
 
-  Addon:AddExtraReplacement("Block Value Proc",
+  Addon:AddExtraReplacement("Mana Regen Trinket Proc",
     {
-      INPUT  = "[Ii]ncreases your shield block value by (%d+)",
-      OUTPUT = function(value)
-        return "+" .. value .. " " .. Addon.statsInfo["Block Value"]:GetAlias()
+      INPUT  = "bonus%s+of%s+(%d+)%s+mana%s+regen%s+per%s+5%s+sec",
+      OUTPUT = function(regen)
+        return "+" .. regen .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
       end,
     }
   )

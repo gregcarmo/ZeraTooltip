@@ -317,45 +317,50 @@ function Addon:RewordLine(tooltip, line, tooltipData)
           end
         end
       end
-      tblSort(replacements, function(a, b) return b[1] < a[1] end)
-      local highest, failed
+      tblSort(replacements, function(a, b)
+        if a[1] ~= b[1] then
+          return b[1] < a[1]
+        else
+          return b[2] < a[2]
+        end
+      end)
+      local filteredReplacements = {}
+      local leftmostStart
       for _, replacement in ipairs(replacements) do
         local startI, endI, stat = unpack(replacement)
-        if highest and endI >= highest then
-          failed = true
+        if not leftmostStart or endI < leftmostStart then
+          tinsert(filteredReplacements, replacement)
+          leftmostStart = startI
         end
-        highest = startI
       end
-      if not failed then
-        for _, replacement in ipairs(replacements) do
-          local startI, endI, stat = unpack(replacement)
-          local statInfo = self.statsInfo[stat]
-          
-          local statText = strSub(text, startI, endI)
-          local replacementText = statText
-          if self:GetOption("allow", "reword") then
-            local plus, number = strMatch(statText, "(%+?)(" .. self.L["%d[%d,%.]*"] .. ")")
-            if number and strFind(number, "%d") then -- needed for dealing with false positives like title line of 103945
-              local defaultForm = statInfo:GetDefaultForm(number)
-              local normalForm = statInfo:ConvertToNormalForm(defaultForm)
-              local aliasForm = statInfo:Reword(normalForm, normalForm)
-              if plus == "" then
-                aliasForm = strGsub(aliasForm, "^%+", "") -- won't work in some locales
-              end
-              
-              replacementText = aliasForm
-              if self:GetOption("allow", "recolor") then
-                replacementText = self:MakeColorCode(statInfo.color, replacementText)
-              end
+      for _, replacement in ipairs(filteredReplacements) do
+        local startI, endI, stat = unpack(replacement)
+        local statInfo = self.statsInfo[stat]
+        
+        local statText = strSub(text, startI, endI)
+        local replacementText = statText
+        if self:GetOption("allow", "reword") then
+          local plus, number = strMatch(statText, "(%+?)(" .. self.L["%d[%d,%.]*"] .. ")")
+          if number and strFind(number, "%d") then -- needed for dealing with false positives like title line of 103945
+            local defaultForm = statInfo:GetDefaultForm(number)
+            local normalForm = statInfo:ConvertToNormalForm(defaultForm)
+            local aliasForm = statInfo:Reword(normalForm, normalForm)
+            if plus == "" then
+              aliasForm = strGsub(aliasForm, "^%+", "") -- won't work in some locales
             end
-          else
-            if self:GetOption("allow", "recolor") then
-              replacementText = self:MakeColorCode(statInfo.color, replacementText)
+            
+            replacementText = aliasForm
+            if self:GetOption("allow", "recolor") and self:GetOption("doRecolor", stat) then
+              replacementText = self:MakeColorCode(self:GetOption("color", stat), replacementText)
             end
           end
-          
-          text = strSub(text, 1, startI-1) .. replacementText .. strSub(text, endI+1)
+        else
+          if self:GetOption("allow", "recolor") and self:GetOption("doRecolor", stat) then
+            replacementText = self:MakeColorCode(self:GetOption("color", stat), replacementText)
+          end
         end
+        
+        text = strSub(text, 1, startI-1) .. replacementText .. strSub(text, endI+1)
       end
     end
     
