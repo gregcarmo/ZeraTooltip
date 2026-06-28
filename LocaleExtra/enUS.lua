@@ -567,6 +567,13 @@ if Addon.isTBC then
       end,
     },
     {
+      -- Critical Strike Rating Enchant
+      INPUT  = "%+([%d,]+) Critical Strike Rating",
+      OUTPUT = function(crit)
+        return "+" .. crit .. " " .. Addon.statsInfo["Physical Critical Strike Rating"]:GetAlias()
+      end,
+    },
+    {
       -- Spell Hit Rating Enchant
       INPUT  = "%+([%d,]+) Spell Hit Rating",
       OUTPUT = function(hit)
