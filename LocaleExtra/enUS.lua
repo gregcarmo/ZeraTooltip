@@ -560,6 +560,13 @@ if Addon.isTBC then
       end,
     },
     {
+      -- All Resistances Enchant
+      INPUT  = "%+([%d,]+) All Resistances",
+      OUTPUT = function(resist)
+        return "+" .. resist .. " " .. Addon.statsInfo["All Resistance"]:GetAlias()
+      end,
+    },
+    {
       -- Spell Critical Strike Rating Enchant
       INPUT  = "%+([%d,]+) Spell Critical Strike Rating",
       OUTPUT = function(crit)
@@ -581,6 +588,13 @@ if Addon.isTBC then
       end,
     },
     {
+      -- Dodge Rating Enchant
+      INPUT  = "%+([%d,]+) Dodge Rating",
+      OUTPUT = function(dodge)
+        return "+" .. dodge .. " " .. Addon.statsInfo["Dodge Rating"]:GetAlias()
+      end,
+    },
+    {
       -- Attack Power and Critical Strike Rating Enchant
       INPUT  = "%+([%d,]+) Attack Power and %+([%d,]+) Critical Strike Rating",
       OUTPUT = function(ap, crit)
@@ -599,6 +613,13 @@ if Addon.isTBC then
       INPUT  = "%+([%d,]+) mana every 5 sec%.?",
       OUTPUT = function(regen)
         return "+" .. regen .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias()
+      end,
+    },
+    {
+      -- Mana Regen and Healing Enchant
+      INPUT  = "%+([%d,]+) Mana Regen and %+([%d,]+) Healing",
+      OUTPUT = function(regen, healing)
+        return "+" .. regen .. " " .. Addon.statsInfo["Mana Regeneration"]:GetAlias() .. " and +" .. healing .. " " .. Addon.statsInfo["Healing"]:GetAlias()
       end,
     }
   )
