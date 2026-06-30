@@ -73,6 +73,10 @@ local miscRewordLines = Addon:MakeLookupTable{
   "SetBonus",
 }
 
+local function IsPermanentEnchantText(text)
+  return strFind(text, "[Pp]ermanent") or strFind(text, "[Dd]auerhaft") or strFind(text, "영구") or strFind(text, "永久") or strFind(text, "[Пп]остоянн")
+end
+
 function Addon:RewordLine(tooltip, line, tooltipData)
   local isRatingBusterActive = RatingBuster and RatingBuster.ProcessLine and true or false
   
@@ -90,7 +94,7 @@ function Addon:RewordLine(tooltip, line, tooltipData)
     text, line.rewordRight = unpack(cache, 1, 2)
   else
     
-    if not line.stat and miscRewordLines[line.type] and self:GetOption("doReword", "Miscellaneous") then
+    if not line.stat and miscRewordLines[line.type] and not IsPermanentEnchantText(text) and self:GetOption("doReword", "Miscellaneous") then
       -- localeExtra replacements
       if self:GetOption("allow", "reword") then
         for _, definition in ipairs(self:GetExtraReplacements()) do
@@ -281,7 +285,7 @@ function Addon:RewordLine(tooltip, line, tooltipData)
       end
     end
     
-    if not line.stat and embeddedStatLines[line.type] and (self:GetOption("allow", "reword") or self:GetOption("allow", "recolor")) then
+    if not line.stat and embeddedStatLines[line.type] and not IsPermanentEnchantText(text) and (self:GetOption("allow", "reword") or self:GetOption("allow", "recolor")) then
       -- rename and recolor stats in the middle of non-stat lines
       local lowerText = strLower(text)
       
